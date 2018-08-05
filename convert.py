@@ -114,8 +114,8 @@ def get_all_units(registry):
 def main():
     """Main function."""
     app = QtWidgets.QApplication()
-    conv = Converter()
-    conv.show()
+    converter = Converter()
+    converter.show()
     sys.exit(app.exec_())
 
 
