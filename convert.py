@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""Simple unit conversion GUI."""
 import sys
 import pint
 from PySide2 import QtCore, QtGui, QtWidgets
@@ -9,8 +10,10 @@ ureg = pint.UnitRegistry()
 
 
 class Converter(QtWidgets.QWidget):
+    """GUI class representing a unit conversion tool."""
 
     def __init__(self):
+        """Initializer."""
         super().__init__()
         self.setWindowTitle("Unit Converter")
 
@@ -69,6 +72,7 @@ class Converter(QtWidgets.QWidget):
         self.clear_button.clicked.connect(self.clear)
 
     def convert(self):
+        """Run the unit conversion."""
         input_amount = float(self.input_value.text())
         input_unit = self.input_unit.currentText()
         output_unit = self.output_unit.currentText()
@@ -77,6 +81,7 @@ class Converter(QtWidgets.QWidget):
         self.repaint()
 
     def switch(self):
+        """Switch the units."""
         input_unit = self.input_unit.currentText()
         output_unit = self.output_unit.currentText()
         self.input_unit.setCurrentText(output_unit)
@@ -85,6 +90,7 @@ class Converter(QtWidgets.QWidget):
         self.convert()
 
     def clear(self):
+        """Clear all input fields."""
         self.input_value.clear()
         self.input_unit.clearEditText()
         self.output_value.clear()
