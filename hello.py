@@ -3,7 +3,7 @@
 """Hello World GUI."""
 import sys
 import random
-from PySide2 import QtWidgets
+from PySide2 import QtCore, QtWidgets
 
 
 class HelloWorld(QtWidgets.QWidget):
@@ -19,6 +19,7 @@ class HelloWorld(QtWidgets.QWidget):
         ]
 
         self.label = QtWidgets.QLabel(self.texts[0])
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.button = QtWidgets.QPushButton("Do Magic")
         self.button.clicked.connect(self.magic)
 
