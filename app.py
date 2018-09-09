@@ -15,27 +15,33 @@ class MyWindow(QtWidgets.QMainWindow):
         self.zoom_factor = 1.2
         self.maybe_save = False
 
-        self.bg_brush = QtGui.QBrush(Qt.darkGray)
-        self.node_pen = QtGui.QPen(Qt.white)
+        self.bg_brush = QtGui.QBrush(Qt.white)
+        self.node_pen = QtGui.QPen(Qt.black, 2)
         self.node_brush = QtGui.QBrush(Qt.lightGray)
+        self.edge_pen = QtGui.QPen(Qt.black, 5)
 
         self.setWindowTitle("Main App")
+        self.showMaximized()
 
-        self.create_icons()
+        self.init_icons()
+        self.init_actions()
+        self.init_widgets()
 
-        self.status_bar = QtWidgets.QStatusBar()
-        self.setStatusBar(self.status_bar)
+        self.no_drag_mode()
+        self.status_bar.showMessage("Ready")
 
-        self.scene = QtWidgets.QGraphicsScene()
-        self.scene.setBackgroundBrush(self.bg_brush)
+    def init_icons(self):
+        self.open_icon = QtGui.QIcon("icons/Open.png")
+        self.save_icon = QtGui.QIcon("icons/Save.png")
+        self.save_as_icon = QtGui.QIcon("icons/Save-As.png")
+        self.quit_icon = QtGui.QIcon("icons/Logout.png")
+        self.add_new_icon = QtGui.QIcon("icons/Add-New.png")
+        self.zoom_in_icon = QtGui.QIcon("icons/Zoom-In.png")
+        self.zoom_out_icon = QtGui.QIcon("icons/Zoom-Out.png")
+        self.select_icon = QtGui.QIcon("icons/Cursor.png")
+        self.move_icon = QtGui.QIcon("icons/Mouse-Drag.png")
 
-        self.view = QtWidgets.QGraphicsView(self.scene)
-        self.view.setMinimumWidth(400)
-        self.view.setMinimumHeight(300)
-        self.view.setInteractive(True)
-        self.setCentralWidget(self.view)
-
-        # Actions:
+    def init_actions(self):
         self.open_action = QtWidgets.QAction("Open", parent=self)
         self.open_action.setIcon(self.open_icon)
         self.save_action = QtWidgets.QAction("Save", parent=self)
@@ -49,6 +55,10 @@ class MyWindow(QtWidgets.QMainWindow):
         self.add_node_action = QtWidgets.QAction("Add Node", parent=self)
         self.add_node_action.setIcon(self.add_new_icon)
         self.add_node_action.triggered.connect(self.add_node)
+
+        self.add_edge_action = QtWidgets.QAction("Add Edge", parent=self)
+        self.add_edge_action.triggered.connect(self.add_edge)
+
         self.zoom_in_action = QtWidgets.QAction("Zoom in", parent=self)
         self.zoom_in_action.setIcon(self.zoom_in_icon)
         self.zoom_in_action.triggered.connect(self.zoom_in)
@@ -63,10 +73,17 @@ class MyWindow(QtWidgets.QMainWindow):
         self.move_action.setIcon(self.move_icon)
         self.move_action.setCheckable(True)
         self.move_action.triggered.connect(self.move_mode)
-
         self.info_action = QtWidgets.QAction("Info", parent=self)
         self.info_action.triggered.connect(self.info)
 
+    def init_widgets(self):
+        self.scene = QtWidgets.QGraphicsScene()
+        self.scene.setBackgroundBrush(self.bg_brush)
+        self.view = QtWidgets.QGraphicsView(self.scene)
+        self.view.setMinimumWidth(400)
+        self.view.setMinimumHeight(300)
+        self.view.setInteractive(True)
+        self.setCentralWidget(self.view)
         # Menu Bar:
         self.menu_bar = QtWidgets.QMenuBar(parent=self)
         self.menu_bar.setNativeMenuBar(False)
@@ -78,6 +95,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.file_menu.addAction(self.quit_action)
         self.edit_menu = self.menu_bar.addMenu("Edit")
         self.edit_menu.addAction(self.add_node_action)
+        self.edit_menu.addAction(self.add_edge_action)
         self.edit_menu.addSeparator()
         self.edit_menu.addAction(self.select_action)
         self.edit_menu.addAction(self.move_action)
@@ -87,10 +105,11 @@ class MyWindow(QtWidgets.QMainWindow):
         self.about_menu = self.menu_bar.addMenu("About")
         self.about_menu.addAction(self.info_action)
         self.setMenuBar(self.menu_bar)
-
         # Tool Bar:
         self.tool_bar = QtWidgets.QToolBar("Main Tool Bar", parent=self)
         self.tool_bar.addAction(self.add_node_action)
+        self.tool_bar.addAction(self.add_edge_action)
+
         self.tool_bar.addAction(self.zoom_in_action)
         self.tool_bar.addAction(self.zoom_out_action)
         self.tool_bar.addSeparator()
@@ -99,22 +118,9 @@ class MyWindow(QtWidgets.QMainWindow):
         self.tool_bar.addSeparator()
         self.tool_bar.addAction(self.quit_action)
         self.addToolBar(self.tool_bar)
-
-        self.no_drag_mode()
-        self.status_bar.showMessage("Ready")
-
-    def create_icons(self):
-        # App Level Icons:
-        self.open_icon = QtGui.QIcon("icons/Open.png")
-        self.save_icon = QtGui.QIcon("icons/Save.png")
-        self.save_as_icon = QtGui.QIcon("icons/Save-As.png")
-        self.quit_icon = QtGui.QIcon("icons/Logout.png")
-        # Tool Level Icons:
-        self.add_new_icon = QtGui.QIcon("icons/Add-New.png")
-        self.zoom_in_icon = QtGui.QIcon("icons/Zoom-In.png")
-        self.zoom_out_icon = QtGui.QIcon("icons/Zoom-Out.png")
-        self.select_icon = QtGui.QIcon("icons/Cursor.png")
-        self.move_icon = QtGui.QIcon("icons/Mouse-Drag.png")
+        # Status Bar:
+        self.status_bar = QtWidgets.QStatusBar()
+        self.setStatusBar(self.status_bar)
 
     def closeEvent(self, event):
         if self.maybe_save:
@@ -141,8 +147,23 @@ class MyWindow(QtWidgets.QMainWindow):
         node.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
         node.setCursor(Qt.PointingHandCursor)
         self.scene.addItem(node)
+
         self.maybe_save = True
         self.status_bar.showMessage(f"Added node at ({x}, {y})")
+
+    def add_edge(self):
+        selection = self.scene.selectedItems()
+        if not selection:
+            self.status_bar.showMessage("No node selected. No edge added.")
+        else:
+            first = selection[0]
+            edge = QtWidgets.QGraphicsLineItem(0, 0, first.x(), first.y())
+            edge.setPen(self.edge_pen)
+            self.scene.addItem(edge)
+
+            self.maybe_save = True
+            self.status_bar.showMessage(
+                f"Added edge from (0, 0) to ({first.x()}, {first.y()})")
 
     def zoom_in(self):
         self.view.scale(self.zoom_factor, self.zoom_factor)
@@ -160,6 +181,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.view.setDragMode(QtWidgets.QGraphicsView.NoDrag)
         self.move_action.setChecked(False)
         self.select_action.setChecked(False)
+        self.status_bar.showMessage("Activated No Drag Mode")
 
     def select_mode(self):
         self.view.setDragMode(QtWidgets.QGraphicsView.RubberBandDrag)
