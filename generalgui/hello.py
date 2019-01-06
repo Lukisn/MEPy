@@ -3,6 +3,8 @@
 """Hello World GUI."""
 import sys
 import random
+
+import PySide2
 from PySide2 import QtCore, QtWidgets
 
 
@@ -15,7 +17,10 @@ class HelloWorld(QtWidgets.QWidget):
         self.texts = [
             "Hello World!",
             "Hallo Welt!",
-            "Hola Mundo!",
+            "你好，世界",
+            "Hei maailma",
+            "Hola Mundo",
+            "Привет мир",
         ]
 
         self.label = QtWidgets.QLabel(self.texts[0])
@@ -40,6 +45,9 @@ class HelloWorld(QtWidgets.QWidget):
 
 def main():
     """Main function."""
+    print(f"PySide2 version:        {PySide2.__version__}")
+    print(f"PySide2.QtCore version: {PySide2.QtCore.__version__}")
+
     app = QtWidgets.QApplication()
     window = HelloWorld()
     window.show()
