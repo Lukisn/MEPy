@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """Simple unit conversion GUI."""
 import sys
-import pint
-from PySide2 import QtCore, QtGui, QtWidgets
 
+import pint
+from PySide6 import QtCore, QtGui, QtWidgets
 
 ureg = pint.UnitRegistry()
 
@@ -116,7 +116,7 @@ def main():
     app = QtWidgets.QApplication()
     converter = Converter()
     converter.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":

@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Hello World GUI."""
-import sys
 import random
+import sys
 
-import PySide2
-from PySide2 import QtCore, QtWidgets
+import PySide6
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget
 
 
-class HelloWorld(QtWidgets.QWidget):
+class HelloWorld(QWidget):
     """Simple GUI showing a text label and a button."""
 
     def __init__(self):
@@ -23,12 +24,12 @@ class HelloWorld(QtWidgets.QWidget):
             "Привет мир",
         ]
 
-        self.label = QtWidgets.QLabel(self.texts[0])
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.button = QtWidgets.QPushButton("Do Magic")
+        self.label = QLabel(self.texts[0])
+        self.label.setAlignment(Qt.AlignCenter)
+        self.button = QPushButton("Do Magic")
         self.button.clicked.connect(self.magic)
 
-        self.layout = QtWidgets.QVBoxLayout()
+        self.layout = QVBoxLayout()
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.button)
         self.setLayout(self.layout)
@@ -45,13 +46,13 @@ class HelloWorld(QtWidgets.QWidget):
 
 def main():
     """Main function."""
-    print(f"PySide2 version:        {PySide2.__version__}")
-    print(f"PySide2.QtCore version: {PySide2.QtCore.__version__}")
+    print(f"PySide6 version:        {PySide6.__version__}")
+    print(f"PySide6.QtCore version: {PySide6.QtCore.__version__}")
 
-    app = QtWidgets.QApplication()
-    window = HelloWorld()
-    window.show()
-    sys.exit(app.exec_())
+    app = QApplication()
+    hello = HelloWorld()
+    hello.show()
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":
