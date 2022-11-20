@@ -19,18 +19,18 @@ from units import Units, units_map
 
 
 class FluidPropertyWidget(QWidget):
-    """Heat flow calculator widget"""
+    """Fluid property calculator widget."""
 
     SHOW_TEXT = "Show Details"
     HIDE_TEXT = "Hide Details"
 
     def __init__(self, parent=None):
-        """initializer"""
+        """initializer."""
         super().__init__(parent)
         self.setup_ui()
 
     def setup_ui(self):
-        """Setup user interface"""
+        """Setup user interface."""
         self.create_widgets()
         self.setup_widgets()
         self.setup_layout()
@@ -57,7 +57,7 @@ class FluidPropertyWidget(QWidget):
         self.combo_vol_heat_cap_unit = QComboBox()
 
     def setup_widgets(self):
-        """Setup widgets for the user interface"""
+        """Setup widgets for the user interface."""
         # Setup double validator
         c_locale = QLocale.c()
         c_locale.setNumberOptions(QLocale.NumberOption.RejectGroupSeparator)
@@ -101,7 +101,8 @@ class FluidPropertyWidget(QWidget):
         self.combo_vol_heat_cap_unit.addItems(units_map[Units.VolumetricHeatCapacity])
 
     def setup_layout(self):
-        """Setup layout of the user interface in a grid
+        """Setup layout of the user interface in a grid.
+
         row | 0               | 1    | 2     | 3     | 4      |
         col |-----------------|------|-------|-------|--------|
           0 |"Fluid           |      | Combo         | Button |
@@ -132,7 +133,7 @@ class FluidPropertyWidget(QWidget):
         self.setLayout(layout)
 
     def setup_signals_and_slots(self):
-        """Setup signals and slots"""
+        """Setup signals and slots."""
         # fluid type and units -> read from storage
         self.combo_fluid_type.currentTextChanged.connect(
             self.fluid_type_or_unit_changed
@@ -158,7 +159,7 @@ class FluidPropertyWidget(QWidget):
 
     @Slot()
     def fluid_type_or_unit_changed(self):
-        """Change fluid type or units slot"""
+        """Change fluid type or units slot."""
         # get the update inputs
         fluid_type = self.combo_fluid_type.currentText()
         heat_capacity_unit = self.combo_heat_capacity_unit.currentText()
@@ -183,7 +184,7 @@ class FluidPropertyWidget(QWidget):
 
     @Slot()
     def custom_fluid_properties_changed(self):
-        """Change fluid parameter magnitude slot"""
+        """Change fluid parameter magnitude slot."""
         self.combo_fluid_type.currentData().heat_capacity = Quantity(
             float(self.edit_heat_capacity_magnitude.text() or 0),
             self.combo_heat_capacity_unit.currentText(),
@@ -235,7 +236,10 @@ class FluidPropertyWidget(QWidget):
         self.combo_vol_heat_cap_unit.show()
 
     def calculate_volumetric_heat_capacity(self):
-        """Calculate volumetric heat capacity: C = cp * rho."""
+        """Calculate volumetric heat capacity:
+
+        C = cp * rho.
+        """
         heat_capacity = Quantity(
             float(self.edit_heat_capacity_magnitude.text() or 0),
             self.combo_heat_capacity_unit.currentText(),
@@ -252,7 +256,7 @@ class FluidPropertyWidget(QWidget):
 
 
 def main():
-    """Main program"""
+    """Main program."""
     app = QApplication()
     window = FluidPropertyWidget()
     window.setWindowTitle("Fluid Properties")
