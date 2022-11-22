@@ -3,6 +3,7 @@
 
 import sys
 
+from medium import Medium
 from pint import Quantity
 from PySide6.QtCore import QLocale, Qt, Slot
 from PySide6.QtGui import QDoubleValidator
@@ -17,13 +18,12 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 from units import Units, units_map
-from medium import Medium
 
 
 class QalculatorMassWidget(QWidget):
     """Heat flow from mass flow calculator widget."""
 
-    def __init__(self, parent=None, medium: Medium = Medium.water()):
+    def __init__(self, parent=None, medium: Medium = Medium.water()) -> None:
         """initializer."""
         super().__init__(parent)
         self.medium = medium
@@ -41,18 +41,35 @@ class QalculatorMassWidget(QWidget):
 
     def create_widgets(self):
         """Create widgets."""
-        self.label_heat_flow_name = QLabel("Heat Flow")
-        self.label_heat_flow_symbol = QLabel("Q")
-        self.label_mass_flow_name = QLabel("Mass Flow")
-        self.label_mass_flow_symbol = QLabel("m")
-        self.label_volume_flow_name = QLabel("Volume Flow")
-        self.label_volume_flow_symbol = QLabel("V")
-        self.label_temp_diff_name = QLabel("Temp. Diff.")
-        self.label_temp_diff_symbol = QLabel("𝛥T")
+        # Radio Buttons
+        self.radio_heat_flow = QRadioButton()
+        self.radio_fluid_flow = QRadioButton()
+        self.radio_temp_diff = QRadioButton()
+        # Labels
+        self.label_heat_flow_name = QLabel()
+        self.label_heat_flow_symbol = QLabel()
+        self.label_mass_flow_name = QLabel()
+        self.label_mass_flow_symbol = QLabel()
+        self.label_volume_flow_name = QLabel()
+        self.label_volume_flow_symbol = QLabel()
+        self.label_temp_diff_name = QLabel()
+        self.label_temp_diff_symbol = QLabel()
+        # Fields
+        self.edit_heat_flow_magnitude = QLineEdit()
+        self.edit_mass_flow_magnitude = QLineEdit()
+        self.edit_volume_flow_magnitude = QLineEdit()
+        self.edit_temp_diff_magnitude = QLineEdit()
+        # Dropdowns
+        self.combo_heat_flow_unit = QComboBox()
+        self.combo_mass_flow_unit = QComboBox()
+        self.combo_volume_flow_unit = QComboBox()
+        self.combo_temp_diff_unit = QComboBox()
+        # Buttons
+        self.button_mass_flow_action = QPushButton()
+        self.button_volume_flow_action = QPushButton()
 
-    # TODO: refactor with create_widgets() method
     def initialize_widgets(self):
-        """Setup widgets for the user interface"""
+        """Setup widgets for the user interface."""
         # Setup double validator
         c_locale = QLocale.c()
         c_locale.setNumberOptions(QLocale.NumberOption.RejectGroupSeparator)
@@ -60,38 +77,40 @@ class QalculatorMassWidget(QWidget):
         double_validator.setLocale(c_locale)
         double_validator.setNotation(QDoubleValidator.Notation.StandardNotation)
         # Radio Buttons
-        self.radio_heat_flow = QRadioButton()
-        self.radio_heat_flow.setChecked(True)  # initial calculation target
-        self.radio_mass_flow = QRadioButton()
-        self.radio_temp_diff = QRadioButton()
+        self.radio_heat_flow.setChecked(True)
         # Heat Flow
-        self.edit_heat_flow_magnitude = QLineEdit("1.0")
+        self.label_heat_flow_name.setText("Heat Flow")
+        self.label_heat_flow_symbol.setText("Q")
+        self.edit_heat_flow_magnitude.setText("1.0")
         self.edit_heat_flow_magnitude.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.edit_heat_flow_magnitude.setPlaceholderText("Heat Flow")
         self.edit_heat_flow_magnitude.setValidator(double_validator)
-        self.combo_heat_flow_unit = QComboBox()
         self.combo_heat_flow_unit.addItems(units_map[Units.HeatFlow])
         # Mass Flow
-        self.edit_mass_flow_magnitude = QLineEdit("1.0")
+        self.label_mass_flow_name.setText("Mass Flow")
+        self.label_mass_flow_symbol.setText("m")
+        self.edit_mass_flow_magnitude.setText("1.0")
         self.edit_mass_flow_magnitude.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.edit_mass_flow_magnitude.setPlaceholderText("Mass Flow")
         self.edit_mass_flow_magnitude.setValidator(double_validator)
-        self.combo_mass_flow_unit = QComboBox()
         self.combo_mass_flow_unit.addItems(units_map[Units.MassFlow])
-        self.button_mass_flow_action = QPushButton("Action")
+        self.button_mass_flow_action.setText("Action")
         # Volume Flow
-        self.edit_volume_flow_magnitude = QLineEdit("1.0")
-        self.edit_volume_flow_magnitude.setDisabled(True)  # always calculated!
+        self.label_volume_flow_name.setText("Volume Flow")
+        self.label_volume_flow_symbol.setText("V")
+        self.edit_volume_flow_magnitude.setText("1.0")
+        self.edit_volume_flow_magnitude.setDisabled(True)
         self.edit_volume_flow_magnitude.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.combo_volume_flow_unit = QComboBox()
         self.combo_volume_flow_unit.addItems(units_map[Units.VolumeFlow])
-        self.button_volume_flow = QPushButton("Action")
+        self.button_volume_flow_action.setText("Action")
         # Temperature Difference
-        self.edit_temp_diff_magnitude = QLineEdit("1.0")
+        self.label_temp_diff_name.setText("Temp. Diff.")
+        self.label_temp_diff_symbol.setText("𝛥T")
+        self.edit_temp_diff_magnitude.setText("1.0")
         self.edit_temp_diff_magnitude.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.edit_temp_diff_magnitude.setPlaceholderText("Temp. Diff.")
         self.edit_temp_diff_magnitude.setValidator(double_validator)
-        self.combo_temp_diff_unit = QComboBox()
         self.combo_temp_diff_unit.addItems(units_map[Units.TemperatureDifference])
 
     def setup_layout(self):
@@ -101,7 +120,7 @@ class QalculatorMassWidget(QWidget):
         row |-------|-------------|----|------|-------|--------|
           0 | Radio | Heat Flow   | Q  | Edit | Combo |        |
           1 | Radio | Mass Flow   | m  | Edit | Combo | Button |
-          2 |       | Volume Flow | V  | Edit | Combo |        |
+          2 |       | Volume Flow | V  | Edit | Combo | Button |
           3 | Radio | Temp. Diff. | dT | Edit | Combo |        |
         """
         layout = QGridLayout()
@@ -112,7 +131,7 @@ class QalculatorMassWidget(QWidget):
         layout.addWidget(self.edit_heat_flow_magnitude, row, 3)
         layout.addWidget(self.combo_heat_flow_unit, row, 4)
         row = 1  # Mass Flow
-        layout.addWidget(self.radio_mass_flow, row, 0)
+        layout.addWidget(self.radio_fluid_flow, row, 0)
         layout.addWidget(self.label_mass_flow_name, row, 1)
         layout.addWidget(self.label_mass_flow_symbol, row, 2)
         layout.addWidget(self.edit_mass_flow_magnitude, row, 3)
@@ -123,7 +142,7 @@ class QalculatorMassWidget(QWidget):
         layout.addWidget(self.label_volume_flow_symbol, row, 2)
         layout.addWidget(self.edit_volume_flow_magnitude, row, 3)
         layout.addWidget(self.combo_volume_flow_unit, row, 4)
-        layout.addWidget(self.button_volume_flow, row, 5)
+        layout.addWidget(self.button_volume_flow_action, row, 5)
         row = 3  # Temperature Difference
         layout.addWidget(self.radio_temp_diff, row, 0)
         layout.addWidget(self.label_temp_diff_name, row, 1)
@@ -136,7 +155,7 @@ class QalculatorMassWidget(QWidget):
         """Setup signals and slots"""
         # radio buttons -> calculation target
         self.radio_heat_flow.toggled.connect(self.radio_output_selection_changed)
-        self.radio_mass_flow.toggled.connect(self.radio_output_selection_changed)
+        self.radio_fluid_flow.toggled.connect(self.radio_output_selection_changed)
         self.radio_temp_diff.toggled.connect(self.radio_output_selection_changed)
         # magnitudes and units -> recalculate
         self.edit_heat_flow_magnitude.textEdited.connect(self.inputs_changed)
@@ -150,8 +169,7 @@ class QalculatorMassWidget(QWidget):
 
     @Slot()
     def radio_output_selection_changed(self):
-        """Set output variable: heat flow, fluid flow or temperature difference"""
-        print(f"output radio button toggled: {self.sender()}")
+        """Set output variable: heat flow, fluid flow or temperature difference."""
         # enable all line edit fields
         self.edit_heat_flow_magnitude.setEnabled(True)
         self.edit_mass_flow_magnitude.setEnabled(True)
@@ -159,7 +177,7 @@ class QalculatorMassWidget(QWidget):
         # diasble current output field
         if self.radio_heat_flow.isChecked():
             self.edit_heat_flow_magnitude.setDisabled(True)
-        elif self.radio_mass_flow.isChecked():
+        elif self.radio_fluid_flow.isChecked():
             self.edit_mass_flow_magnitude.setDisabled(True)
         else:  # self.radio_temperature_difference.isChecked():
             self.edit_temp_diff_magnitude.setDisabled(True)
@@ -168,19 +186,19 @@ class QalculatorMassWidget(QWidget):
 
     @Slot()
     def inputs_changed(self):
-        print(f"input changed: {self.sender()}")
+        """Recalculate on changed inputs slot."""
         if self.radio_heat_flow.isChecked():
             self.calculate_heat_flow()
-        elif self.radio_mass_flow.isChecked():
+        elif self.radio_fluid_flow.isChecked():
             self.calculate_mass_flow()
         else:  # self.radio_temperature_difference.isChecked():
             self.calculate_temperature_difference()
         self.calculate_volume_flow()
 
     def calculate_heat_flow(self):
-        """Calculate heat flow using:
+        """Calculate heat flow.
 
-        Q = m * cp * dT
+        Using formula: Q = m * cp * dT
         """
         # read inputs
         mass_flow = Quantity(
@@ -232,7 +250,9 @@ class QalculatorMassWidget(QWidget):
         )
 
     def calculate_volume_flow(self):
-        """Calculate volume flow using: V = m / rho"""
+        """Calculate volume flow.
+
+        Using formula: V = m / rho"""
         # read inputs
         mass_flow = Quantity(
             float(self.edit_mass_flow_magnitude.text() or 0),
@@ -249,7 +269,9 @@ class QalculatorMassWidget(QWidget):
         )
 
     def calculate_temperature_difference(self):
-        """Calculate temperature difference using: dT = Q / (m * cp)"""
+        """Calculate temperature difference.
+
+        Using formula: dT = Q / (m * cp)"""
         # read inputs
         heat_flow = Quantity(
             float(self.edit_heat_flow_magnitude.text() or 0),
@@ -274,7 +296,7 @@ class QalculatorMassWidget(QWidget):
 
 
 def main():
-    """Main program"""
+    """Main program."""
     app = QApplication()
     window = QalculatorMassWidget()
     window.setWindowTitle("Qalculator Mass")
