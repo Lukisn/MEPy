@@ -1,10 +1,13 @@
-"""Heat Flow Calculator GUI"""
+"""Original Heat Flow Calculator GUI.
+
+All in one widget with complicated logic for the different calculation paths.
+"""
 
 import sys
 
 from pint import UnitRegistry
 from PySide6.QtCore import QLocale, Qt, Slot
-from PySide6.QtGui import QDoubleValidator, QIcon
+from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import (
     QApplication,
     QButtonGroup,
