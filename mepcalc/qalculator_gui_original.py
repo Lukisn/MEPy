@@ -26,7 +26,7 @@ ureg = UnitRegistry()
 class QalculatorWidget(QWidget):
     """Heat flow calculator widget"""
 
-    units = {  # TODO: refactor this using less har dcoded strings
+    units = {
         "heat_capacity": ["kJ/(kg K)", "J/(kg K)"],
         "density": ["kg/m³", "kg/dm³", "kg/cm³", "g/m³", "g/dm³", "g/cm³"],
         "heat_flow": ["kW", "W", "MW", "kWh/s", "Wh/s", "MWh/s"],
@@ -35,7 +35,7 @@ class QalculatorWidget(QWidget):
         "temperature_difference": ["K"],
     }
 
-    fluids = {  # TODO: refactor this to make it more convenient to use
+    fluids = {
         "Water": {
             "heat_capacity": ureg.Quantity(4148.0, "kJ/(kg K)"),
             # https://www.wolframalpha.com/input?i=water+specific+heat+capacity+at+20+°C
