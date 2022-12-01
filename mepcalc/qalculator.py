@@ -30,7 +30,7 @@ as inputs, since they are assumed to be fixed):
 
 import sys
 
-from medium import Medium
+from .medium import Medium
 from pint import Quantity, UnitRegistry, Unit
 
 ureg = UnitRegistry()
@@ -176,23 +176,3 @@ class Qalculator:
         self.check(volume_flow, self.VOLUME_FLOW_UNIT)
         temp_diff = heat_flow / (volume_flow * self.medium.volumetric_heat_capacity)
         return temp_diff.to(unit)
-
-
-def main():
-    """Main program."""
-    qalc = Qalculator(medium=Medium.water())
-    print(qalc)
-
-    # TODO: extract testing code into unit tests
-    mass_flow = Quantity(10.5, "kg/h")
-    temp_diff = Quantity(15, "K")
-    print(f"m = {mass_flow:~P}")
-    print(f"𝛥T = {temp_diff:~P}")
-    result = qalc.heat_flow_from_mass_flow(mass_flow, temp_diff, ureg.kilowatt)
-    print(f"Q = f(m, 𝛥T) = {result:~P}")
-
-    sys.exit()
-
-
-if __name__ == "__main__":
-    main()

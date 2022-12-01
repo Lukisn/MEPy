@@ -24,9 +24,7 @@ class Medium:
             density=Quantity(1.205, "kg/m³"),
         )
 
-    def __init__(
-        self, name: str, heat_cap: type[Quantity], density: type[Quantity]
-    ) -> None:
+    def __init__(self, name: str, heat_cap: Quantity, density: Quantity) -> None:
         """Initializer."""
         self._name = name
         # TODO: check dimensionality of Quantity instances
