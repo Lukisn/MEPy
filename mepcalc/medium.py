@@ -1,24 +1,28 @@
 """Medium class and medium mapping."""
 
 from enum import Enum, auto
-
-from pint import Quantity
+from typing import Self
+from .units import check_dimensionality
+from pint import Quantity, Unit
 
 
 class Medium:
     """Medium Properties."""
 
+    HEAT_CAPACITY_UNIT = Unit("J/(kg K)")
+    DENSITY_UNIT = Unit("kg/m³")
+
     @classmethod
-    def water(cls):
-        return Medium(
+    def water(cls) -> Self:
+        return cls(
             name="Water",
             heat_cap=Quantity(4148.0, "kJ/(kg K)"),
             density=Quantity(998.2, "kg/m³"),
         )
 
     @classmethod
-    def air(cls):
-        return Medium(
+    def air(cls) -> Self:
+        return cls(
             name="Air",
             heat_cap=Quantity(1006.0, "kJ/(kg K)"),
             density=Quantity(1.205, "kg/m³"),
@@ -27,11 +31,12 @@ class Medium:
     def __init__(self, name: str, heat_cap: Quantity, density: Quantity) -> None:
         """Initializer."""
         self._name = name
-        # TODO: check dimensionality of Quantity instances
+        check_dimensionality(heat_cap, self.HEAT_CAPACITY_UNIT)
+        check_dimensionality(density, self.DENSITY_UNIT)
         self._heat_capacity = heat_cap
         self._density = density
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         """String representation."""
         return (
             f"{self.__class__.__name__}("
@@ -52,9 +57,10 @@ class Medium:
         return self._heat_capacity
 
     @heat_capacity.setter
-    def heat_capacity(self, value):
-        """Setter for (isobaric heat capacity property."""
-        self._heat_capacity = value  # TODO: check dimensionality
+    def heat_capacity(self, value: Quantity) -> None:
+        """Setter for (isobaric) heat capacity property."""
+        check_dimensionality(value, self.HEAT_CAPACITY_UNIT)
+        self._heat_capacity = value
 
     @property
     def density(self) -> Quantity:
@@ -62,9 +68,10 @@ class Medium:
         return self._density
 
     @density.setter
-    def density(self, value):
+    def density(self, value: Quantity) -> None:
         """Setter for density property."""
-        self._density = value  # TODO: check dimensionality
+        check_dimensionality(value, self.DENSITY_UNIT)
+        self._density = value
 
     @property
     def volumetric_heat_capacity(self) -> Quantity:
@@ -78,14 +85,3 @@ class Media(Enum):
 
 
 media_map = {Media.Water: Medium.water(), Media.Air: Medium.air()}
-
-
-def main():
-    for kind, medium in media_map.items():
-        print(f"{kind:20s} {medium}")
-
-    print(Medium.water())
-
-
-if __name__ == "__main__":
-    main()

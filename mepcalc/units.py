@@ -1,6 +1,17 @@
-"""Unit knds and mapping"""
+"""Unit kinds and mapping"""
 
 from enum import Enum, auto
+from pint import Quantity, Unit
+
+
+def check_dimensionality(quantity: Quantity, unit: Unit) -> None:
+    """Check that quantity is of the same dimension as unit."""
+    expected_dimensionality = unit.dimensionality
+    if not quantity.dimensionality == expected_dimensionality:
+        raise ValueError(
+            f"Unexpected dimensionality '{quantity.dimensionality}', "
+            f"expected: '{expected_dimensionality}'"
+        )
 
 
 class Units(Enum):
