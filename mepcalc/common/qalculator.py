@@ -28,13 +28,11 @@ as inputs, since they are assumed to be fixed):
     (H) 𝛥T = f(Q, V) = Q / (V * C)
 """
 
-from pint import Quantity, UnitRegistry, Unit
+from pint import Quantity, Unit
 
+from mepcalc import ureg
 from mepcalc.common.medium import Medium
 from mepcalc.common.units import check_dimensionality
-
-ureg = UnitRegistry()  # TODO: make single registry in top level __init__.py
-# https://pint.readthedocs.io/en/stable/getting/pint-in-your-projects.html
 
 
 class Qalculator:
@@ -63,16 +61,6 @@ class Qalculator:
     def medium(self):
         """Getter for medium."""
         return self._medium
-
-    # @staticmethod
-    # def check(quantity: Quantity, unit: Unit) -> None:
-    #     """Check that quantity is of the dimensionality of the given unit."""
-    #     expected_dimensionality = unit.dimensionality
-    #     if not quantity.dimensionality == expected_dimensionality:
-    #         raise ValueError(
-    #             f"Unexpected dimensionality '{quantity.dimensionality}', "
-    #             f"expected: '{expected_dimensionality}'"
-    #         )
 
     def heat_flow_from_mass_flow(
         self,

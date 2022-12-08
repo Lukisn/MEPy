@@ -4,8 +4,8 @@ import sys
 
 from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QTabWidget
 
-from mepcalc.gui.qalculator_gui_mass import QalculatorMassWidget
-from mepcalc.gui.qalculator_gui_volume import QalculatorVolumeWidget
+from mepcalc.gui.qalculator_mass import QalculatorMassWidget
+from mepcalc.gui.qalculator_volume import QalculatorVolumeWidget
 
 
 class MEPCalc(QMainWindow):

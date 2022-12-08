@@ -3,16 +3,17 @@
 from enum import Enum, auto
 from typing import Self
 
-from pint import Quantity, Unit
+from pint import Quantity
 
+from mepcalc import ureg
 from mepcalc.common.units import check_dimensionality
 
 
 class Medium:
     """Medium Properties."""
 
-    HEAT_CAPACITY_UNIT = Unit("J/(kg K)")
-    DENSITY_UNIT = Unit("kg/m³")
+    HEAT_CAPACITY_UNIT = ureg.joule / (ureg.kilogram * ureg.kelvin)  # Unit("J/(kg K)")
+    DENSITY_UNIT = ureg.kilogram / ureg.meter**3  # Unit("kg/m³")
 
     @classmethod
     def water(cls) -> Self:
