@@ -2,8 +2,10 @@
 
 from enum import Enum, auto
 from typing import Self
-from .units import check_dimensionality
+
 from pint import Quantity, Unit
+
+from mepcalc.common.units import check_dimensionality
 
 
 class Medium:

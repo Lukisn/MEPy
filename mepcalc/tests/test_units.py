@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from unittest import TestCase
-from mepcalc.units import check_dimensionality
+
 from pint import Quantity, Unit
+
+from mepcalc.common.units import check_dimensionality
 
 
 class TestCheckDimensionality(TestCase):

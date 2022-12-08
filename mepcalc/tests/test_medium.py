@@ -3,9 +3,9 @@
 
 from unittest import TestCase
 
-from mepcalc.medium import Medium
-
 from pint import Quantity
+
+from mepcalc.common.medium import Medium
 
 
 class TestMedium(TestCase):

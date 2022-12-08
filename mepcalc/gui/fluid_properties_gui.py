@@ -2,8 +2,6 @@
 
 import sys
 
-from medium import Medium, media_map
-from pint import Quantity
 from PySide6.QtCore import QLocale, Qt, Slot
 from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import (
@@ -15,7 +13,10 @@ from PySide6.QtWidgets import (
     QPushButton,
     QWidget,
 )
-from units import Units, units_map
+from pint import Quantity
+
+from mepcalc.common.medium import Medium, media_map
+from mepcalc.common.units import Units, units_map
 
 
 class FluidPropertyWidget(QWidget):

@@ -1,6 +1,7 @@
 """Unit kinds and mapping"""
 
 from enum import Enum, auto
+
 from pint import Quantity, Unit
 
 

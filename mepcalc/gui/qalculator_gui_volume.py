@@ -6,9 +6,10 @@ based on volume flow.
 
 import sys
 
-from pint import Quantity
 from PySide6.QtWidgets import QApplication
-from qalculator_gui_base import QalculatorWidget
+from pint import Quantity
+
+from mepcalc.gui.qalculator_gui_base import QalculatorWidget
 
 
 class QalculatorVolumeWidget(QalculatorWidget):

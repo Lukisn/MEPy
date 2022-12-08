@@ -3,7 +3,6 @@
 import sys
 from typing import List
 
-from medium import Medium
 from PySide6.QtCore import QLocale, Qt, Slot
 from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import (
@@ -15,7 +14,9 @@ from PySide6.QtWidgets import (
     QRadioButton,
     QWidget,
 )
-from units import Units, units_map
+
+from mepcalc.common.medium import Medium
+from mepcalc.common.units import Units, units_map
 
 
 class QalculatorWidget(QWidget):

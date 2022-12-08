@@ -28,11 +28,13 @@ as inputs, since they are assumed to be fixed):
     (H) 𝛥T = f(Q, V) = Q / (V * C)
 """
 
-from .medium import Medium
-from .units import check_dimensionality
 from pint import Quantity, UnitRegistry, Unit
 
-ureg = UnitRegistry()
+from mepcalc.common.medium import Medium
+from mepcalc.common.units import check_dimensionality
+
+ureg = UnitRegistry()  # TODO: make single registry in top level __init__.py
+# https://pint.readthedocs.io/en/stable/getting/pint-in-your-projects.html
 
 
 class Qalculator:

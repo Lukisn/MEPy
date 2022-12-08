@@ -3,10 +3,10 @@
 
 from unittest import TestCase
 
-from mepcalc.qalculator import Qalculator
-from mepcalc.medium import Medium
-
 from pint import Quantity
+
+from mepcalc.common.medium import Medium
+from mepcalc.common.qalculator import Qalculator
 
 
 class TestQalculator(TestCase):
