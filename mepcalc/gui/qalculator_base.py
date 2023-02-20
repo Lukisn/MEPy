@@ -23,7 +23,7 @@ class QalculatorWidget(QWidget):
     """Heat flow from mass flow calculator widget."""
 
     def __init__(self, parent=None, medium: Medium = Medium.water()) -> None:
-        """initializer."""
+        """Initializer."""
         super().__init__(parent)
         self.medium = medium
         self.permanently_disabled: List[QWidget] = []
