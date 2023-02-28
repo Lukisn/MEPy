@@ -6,17 +6,17 @@ from unittest import TestCase
 from pint import Quantity
 
 from mepcalc.common.medium import Medium
-from mepcalc.common.qalculator import Qalculator
+from mepcalc.common.heat_calculator import HeatCalculator
 
 
-class TestQalculator(TestCase):
-    """Unit tests for Qalculator class."""
+class TestHeatCalculator(TestCase):
+    """Unit tests for HeatCalculator class."""
 
     def setUp(self):
         self.medium = Medium(
             "Test", heat_cap=Quantity(1, "J/(kg K)"), density=Quantity(1, "kg/m³")
         )
-        self.q = Qalculator(medium=self.medium)
+        self.q = HeatCalculator(medium=self.medium)
         # good inputs
         self.good_heat_flow = Quantity(1, "W")  # [length]**2 * [mass] / [time]**3
         self.good_mass_flow = Quantity(1, "kg/s")  # [mass] / [time]

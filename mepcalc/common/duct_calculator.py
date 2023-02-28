@@ -22,36 +22,23 @@ import math
 
 from pint import Quantity, Unit
 
-from mepcalc import ureg
+from mepcalc.common.base_calculator import BaseCalculator
 from mepcalc.common.medium import Medium
 from mepcalc.common.units import check_dimensionality
 
 
-# TODO: extract base class with defaults and init
-class Ductulator:
+class DuctCalculator(BaseCalculator):
     """Calculator for duct air flow."""
-
-    DEFAULT_VOLUME_FLOW_UNIT = ureg.meter**3 / ureg.second
-    DEFAULT_MASS_FLOW_UNIT = ureg.kilogram / ureg.second
-    DEFAULT_VELOCITY_UNIT = ureg.meter / ureg.second
-    DEFAULT_AREA_UNIT = ureg.meter**2
-    DEFAULT_LENGTH_UNIT = ureg.meter
 
     def __init__(self, medium: Medium) -> None:
         """Initializer."""
-        self._medium = medium
-
-    def __repr__(self) -> str:  # pragma: no cover
-        """String representation."""
-        return f"{self.__class__.__name__}(medium={self._medium.name})"
-
-    @property
-    def medium(self):
-        """Getter for medium."""
-        return self._medium
+        super().__init__(medium=medium)
 
     def volume_flow_from_area(
-        self, velocity: Quantity, area: Quantity, unit: Unit = DEFAULT_VOLUME_FLOW_UNIT
+        self,
+        velocity: Quantity,
+        area: Quantity,
+        unit: Unit = BaseCalculator.DEFAULT_VOLUME_FLOW_UNIT,
     ):
         """V = v * A"""
         check_dimensionality(velocity, self.DEFAULT_VELOCITY_UNIT)
@@ -64,7 +51,7 @@ class Ductulator:
         velocity: Quantity,
         width: Quantity,
         height: Quantity,
-        unit: Unit = DEFAULT_VOLUME_FLOW_UNIT,
+        unit: Unit = BaseCalculator.DEFAULT_VOLUME_FLOW_UNIT,
     ):
         """V = v * B * H"""
         check_dimensionality(velocity, self.DEFAULT_VELOCITY_UNIT)
@@ -77,7 +64,7 @@ class Ductulator:
         self,
         velocity: Quantity,
         diameter: Quantity,
-        unit: Unit = DEFAULT_VOLUME_FLOW_UNIT,
+        unit: Unit = BaseCalculator.DEFAULT_VOLUME_FLOW_UNIT,
     ):
         """V = v * pi/4 * D^2"""
         check_dimensionality(velocity, self.DEFAULT_VELOCITY_UNIT)
@@ -86,7 +73,10 @@ class Ductulator:
         return volume_flow.to(unit)
 
     def velocity_from_area(
-        self, volume_flow: Quantity, area: Quantity, unit: Unit = DEFAULT_VELOCITY_UNIT
+        self,
+        volume_flow: Quantity,
+        area: Quantity,
+        unit: Unit = BaseCalculator.DEFAULT_VELOCITY_UNIT,
     ):
         """v = V / A"""
         check_dimensionality(volume_flow, self.DEFAULT_VOLUME_FLOW_UNIT)
@@ -99,7 +89,7 @@ class Ductulator:
         volume_flow: Quantity,
         width: Quantity,
         height: Quantity,
-        unit: Unit = DEFAULT_VELOCITY_UNIT,
+        unit: Unit = BaseCalculator.DEFAULT_VELOCITY_UNIT,
     ):
         """v = V / (B * H)"""
         check_dimensionality(volume_flow, self.DEFAULT_VOLUME_FLOW_UNIT)
@@ -112,7 +102,7 @@ class Ductulator:
         self,
         volume_flow: Quantity,
         diameter: Quantity,
-        unit: Unit = DEFAULT_VELOCITY_UNIT,
+        unit: Unit = BaseCalculator.DEFAULT_VELOCITY_UNIT,
     ):
         """v = V / (pi/4 * D^2)"""
         check_dimensionality(volume_flow, self.DEFAULT_VOLUME_FLOW_UNIT)
@@ -121,7 +111,7 @@ class Ductulator:
         return velocity.to(unit)
 
     def mass_flow_from_volume_flow(
-        self, volume_flow: Quantity, unit: Unit = DEFAULT_MASS_FLOW_UNIT
+        self, volume_flow: Quantity, unit: Unit = BaseCalculator.DEFAULT_MASS_FLOW_UNIT
     ):
         """m = V * ϱ"""
         check_dimensionality(volume_flow, self.DEFAULT_VOLUME_FLOW_UNIT)
@@ -129,7 +119,7 @@ class Ductulator:
         return mass_flow.to(unit)
 
     def volume_flow_from_mass_flow(
-        self, mass_flow: Quantity, unit: Unit = DEFAULT_VOLUME_FLOW_UNIT
+        self, mass_flow: Quantity, unit: Unit = BaseCalculator.DEFAULT_VOLUME_FLOW_UNIT
     ):
         """V = m / ϱ"""
         check_dimensionality(mass_flow, self.DEFAULT_MASS_FLOW_UNIT)

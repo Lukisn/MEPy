@@ -6,17 +6,17 @@ from unittest import TestCase
 from pint import Quantity
 
 from mepcalc.common.medium import Medium
-from mepcalc.common.ductulator import Ductulator
+from mepcalc.common.duct_calculator import DuctCalculator
 
 
-class TestQalculator(TestCase):
-    """Unit tests for Ductulator class."""
+class TestDuctCalculator(TestCase):
+    """Unit tests for DuctCalculator class."""
 
     def setUp(self):
         self.medium = Medium(
             "Test", heat_cap=Quantity(1, "J/(kg K)"), density=Quantity(1, "kg/m³")
         )
-        self.d = Ductulator(medium=self.medium)
+        self.d = DuctCalculator(medium=self.medium)
         # good inputs
         self.good_mass_flow = Quantity(1, "kg/s")  # [mass] / [time]
         self.good_volume_flow = Quantity(1, "m³/s")  # [length]**3 / [time]
@@ -29,16 +29,6 @@ class TestQalculator(TestCase):
         self.bad_velocity = Quantity(1, "s/m")
         self.bad_area = Quantity(1, "m")
         self.bad_length = Quantity(1, "m²")
-
-    # Medium access TODO: extract to base class?
-    def test_medium_getter_succeeds(self):
-        """Check that the medium property returns the medium."""
-        self.assertEqual(self.d.medium, self.medium)
-
-    def test_medium_setter_fails(self):
-        """Check that medium is a read only property."""
-        with self.assertRaises(AttributeError):
-            self.d.medium = Medium.air()
 
     # Volume Flow from Area
     def test_volume_flow_from_area_succeeds(self):

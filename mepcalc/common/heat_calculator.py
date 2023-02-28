@@ -31,11 +31,12 @@ as inputs, since they are assumed to be fixed):
 from pint import Quantity, Unit
 
 from mepcalc import ureg
+from mepcalc.common.base_calculator import BaseCalculator
 from mepcalc.common.medium import Medium
 from mepcalc.common.units import check_dimensionality
 
 
-class Qalculator:
+class HeatCalculator(BaseCalculator):
     """Calculator for heat and mass/volume flow equations.
     (I)    Q = m * cp * 𝛥T
     (II)   m = V * ϱ
@@ -44,29 +45,15 @@ class Qalculator:
     (V)    Q = V * C * 𝛥T       (III) in (IV)
     """
 
-    DEFAULT_HEAT_FLOW_UNIT = ureg.watt
-    DEFAULT_MASS_FLOW_UNIT = ureg.kilogram / ureg.second
-    DEFAULT_VOLUME_FLOW_UNIT = ureg.meter**3 / ureg.second
-    DEFAULT_TEMP_DIFF_UNIT = ureg.kelvin
-
     def __init__(self, medium: Medium) -> None:
         """Initializer."""
-        self._medium = medium
-
-    def __repr__(self) -> str:  # pragma: no cover
-        """String representation."""
-        return f"{self.__class__.__name__}(medium={self._medium.name})"
-
-    @property
-    def medium(self):
-        """Getter for medium."""
-        return self._medium
+        super().__init__(medium=medium)
 
     def heat_flow_from_mass_flow(
         self,
         mass_flow: Quantity,
         temp_diff: Quantity,
-        unit: Unit = DEFAULT_HEAT_FLOW_UNIT,
+        unit: Unit = BaseCalculator.DEFAULT_HEAT_FLOW_UNIT,
     ) -> Quantity:
         """Calculate heat flow from mass flow and temperature difference.
         Q = f(m, 𝛥T) = m * cp * 𝛥T
@@ -80,7 +67,7 @@ class Qalculator:
         self,
         volume_flow: Quantity,
         temp_diff: Quantity,
-        unit: Unit = DEFAULT_HEAT_FLOW_UNIT,
+        unit: Unit = BaseCalculator.DEFAULT_HEAT_FLOW_UNIT,
     ):
         """Calculate heat flow from volume flow and temperature difference.
         Q = f(V, 𝛥T) = V * ϱ *cp * 𝛥T = V * C * 𝛥T
@@ -94,7 +81,7 @@ class Qalculator:
         self,
         heat_flow: Quantity,
         temp_diff: Quantity,
-        unit: Unit = DEFAULT_MASS_FLOW_UNIT,
+        unit: Unit = BaseCalculator.DEFAULT_MASS_FLOW_UNIT,
     ):
         """Calculate mass flow from heat flow and temperature difference.
         m = f(Q, 𝛥T) = Q / (cp * 𝛥T)
@@ -105,7 +92,7 @@ class Qalculator:
         return mass_flow.to(unit)
 
     def mass_flow_from_volume_flow(
-        self, volume_flow: Quantity, unit: Unit = DEFAULT_MASS_FLOW_UNIT
+        self, volume_flow: Quantity, unit: Unit = BaseCalculator.DEFAULT_MASS_FLOW_UNIT
     ):
         """Calculate mass flow from volume flow.
         m = f(V) = V * ϱ
@@ -118,7 +105,7 @@ class Qalculator:
         self,
         heat_flow: Quantity,
         temp_diff: Quantity,
-        unit: Unit = DEFAULT_VOLUME_FLOW_UNIT,
+        unit: Unit = BaseCalculator.DEFAULT_VOLUME_FLOW_UNIT,
     ):
         """Calculate volume flow from heat flow.
         V = f(Q, 𝛥T) = Q / (C * 𝛥T)
@@ -129,7 +116,7 @@ class Qalculator:
         return volume_flow.to(unit)
 
     def volume_flow_from_mass_flow(
-        self, mass_flow: Quantity, unit: Unit = DEFAULT_VOLUME_FLOW_UNIT
+        self, mass_flow: Quantity, unit: Unit = BaseCalculator.DEFAULT_VOLUME_FLOW_UNIT
     ):
         """Calculate volume flow from mass flow.
         V = f(m) = m / ϱ
@@ -142,7 +129,7 @@ class Qalculator:
         self,
         heat_flow: Quantity,
         mass_flow: Quantity,
-        unit: Unit = DEFAULT_TEMP_DIFF_UNIT,
+        unit: Unit = BaseCalculator.DEFAULT_TEMP_DIFF_UNIT,
     ):
         """Calculate temperature difference from mass flow.
         𝛥T = f(Q, m) = Q / (m * cp)
@@ -156,7 +143,7 @@ class Qalculator:
         self,
         heat_flow: Quantity,
         volume_flow: Quantity,
-        unit: Unit = DEFAULT_TEMP_DIFF_UNIT,
+        unit: Unit = BaseCalculator.DEFAULT_TEMP_DIFF_UNIT,
     ):
         """Calculate temperature difference from volume flow.
         𝛥T = f(Q, V) = Q / (V * C)
