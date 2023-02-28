@@ -22,7 +22,7 @@ class TestQalculator(TestCase):
         self.good_mass_flow = Quantity(1, "kg/s")  # [mass] / [time]
         self.good_volume_flow = Quantity(1, "m³/s")  # [length]**3 / [time]
         self.good_temp_diff = Quantity(1, "K")  # [temperature]
-        # bad_inputs
+        # bad inputs
         self.bad_heat_flow = Quantity(1, "J")
         self.bad_mass_flow = Quantity(1, "kg/m")
         self.bad_volume_flow = Quantity(1, "m³/m")

@@ -3,7 +3,7 @@
 V = v * A
         A_rect = B * H
         A_round = pi/4 * D^2
-(V = m * ϱ)
+(V = m / ϱ)
 
 -> Volume Flow
 V = v * A
@@ -16,7 +16,7 @@ v = V / (B * H)
 v = V / (pi/4 * D^2)
 
 -> Mass Flow
-m = V / ϱ
+m = V * ϱ
 """
 import math
 
@@ -27,7 +27,6 @@ from mepcalc.common.medium import Medium
 from mepcalc.common.units import check_dimensionality
 
 
-# TODO: test
 # TODO: extract base class with defaults and init
 class Ductulator:
     """Calculator for duct air flow."""
@@ -95,7 +94,7 @@ class Ductulator:
         velocity = volume_flow / area
         return velocity.to(unit)
 
-    def velocity_from_with_height(
+    def velocity_from_width_height(
         self,
         volume_flow: Quantity,
         width: Quantity,
@@ -124,15 +123,15 @@ class Ductulator:
     def mass_flow_from_volume_flow(
         self, volume_flow: Quantity, unit: Unit = DEFAULT_MASS_FLOW_UNIT
     ):
-        """m = V / ϱ"""
+        """m = V * ϱ"""
         check_dimensionality(volume_flow, self.DEFAULT_VOLUME_FLOW_UNIT)
-        mass_flow = volume_flow / self.medium.density
+        mass_flow = volume_flow * self.medium.density
         return mass_flow.to(unit)
 
     def volume_flow_from_mass_flow(
         self, mass_flow: Quantity, unit: Unit = DEFAULT_VOLUME_FLOW_UNIT
     ):
-        """V = m * ϱ"""
+        """V = m / ϱ"""
         check_dimensionality(mass_flow, self.DEFAULT_MASS_FLOW_UNIT)
-        volume_flow = mass_flow * self.medium.density
+        volume_flow = mass_flow / self.medium.density
         return volume_flow.to(unit)
