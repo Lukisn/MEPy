@@ -4,8 +4,8 @@ import sys
 
 from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QTabWidget
 
-from mepcalc.gui.qalculator_mass import QalculatorMassWidget
-from mepcalc.gui.qalculator_volume import QalculatorVolumeWidget
+from mepcalc.gui.heat_calculator_mass import HeatCalculatorMassWidget
+from mepcalc.gui.heat_calculator_volume import HeatCalculatorVolumeWidget
 
 
 class MEPCalc(QMainWindow):
@@ -24,16 +24,16 @@ class MEPCalc(QMainWindow):
 
     def create_calculations_widgets(self):
         """Create low level calculation widgets."""
-        self.qalculator_mass = QalculatorMassWidget()
-        self.qalculator_volume = QalculatorVolumeWidget()
+        self.heat_calculator_mass = HeatCalculatorMassWidget()
+        self.heat_calculator_volume = HeatCalculatorVolumeWidget()
 
     def setup_tab_interface(self):
         """Setup multilayer tabbed interface."""
         # Second Level Tabs
         heat_flow_tabs = QTabWidget()
         heat_flow_tabs.tabBar().setDocumentMode(True)
-        heat_flow_tabs.addTab(self.qalculator_mass, "Mass Flow")
-        heat_flow_tabs.addTab(self.qalculator_volume, "Volume Flow")
+        heat_flow_tabs.addTab(self.heat_calculator_mass, "Mass Flow")
+        heat_flow_tabs.addTab(self.heat_calculator_volume, "Volume Flow")
         duct_tabs = QTabWidget()
         duct_tabs.tabBar().setDocumentMode(True)
         duct_tabs.addTab(QLabel("Duct: Rectangular"), "Rectangular")

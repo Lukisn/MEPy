@@ -19,7 +19,7 @@ from mepcalc.common.medium import Medium
 from mepcalc.common.units import Units, units_map
 
 
-class QalculatorWidget(QWidget):
+class HeatCalculatorWidget(QWidget):
     """Heat flow from mass flow calculator widget."""
 
     def __init__(self, parent=None, medium: Medium = Medium.water()) -> None:
@@ -174,7 +174,7 @@ class QalculatorWidget(QWidget):
         # disable permanently disabled widgets
         for widget in self.permanently_disabled:
             widget.setDisabled(True)
-        # diasble current output field
+        # disable current output field
         if self.radio_heat_flow.isChecked():
             self.edit_heat_flow_magnitude.setDisabled(True)
         elif self.radio_mass_flow.isChecked():
@@ -209,22 +209,25 @@ class QalculatorWidget(QWidget):
 
     def calculate_heat_flow(self) -> None:
         """Calculate heat flow."""
+        # TODO: notimplemented or abstract method?
 
     def calculate_mass_flow(self) -> None:
         """Calculate mass flow."""
 
     def calculate_volume_flow(self) -> None:
         """Calculate volume flow."""
+        # TODO: notimplemented or abstract method?
 
     def calculate_temperature_difference(self) -> None:
         """Calculate temperature difference."""
+        # TODO: notimplemented or abstract method?
 
 
 def main():
     """Main program."""
     app = QApplication()
-    window = QalculatorWidget()
-    window.setWindowTitle("Qalculator Base")
+    window = HeatCalculatorWidget()
+    window.setWindowTitle("Heat Flow Calculator Base")
     window.show()
     sys.exit(app.exec())
 

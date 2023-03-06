@@ -23,6 +23,9 @@ class Units(Enum):
     MassFlow = auto()
     VolumeFlow = auto()
     TemperatureDifference = auto()
+    Length = auto()
+    Area = auto()
+    Velocity = auto()
 
 
 units_map = {
@@ -35,4 +38,17 @@ units_map = {
     Units.MassFlow: ["kg/s", "kg/min", "kg/h", "g/s", "g/min", "g/s"],
     Units.VolumeFlow: ["m³/h", "m³/min", "m³/s", "l/h", "l/min", "l/s"],
     Units.TemperatureDifference: ["K"],
+    Units.Length: ["m", "dm", "cm", "mm"],
+    Units.Area: ["m²", "dm²", "cm²", "mm²"],
+    Units.Velocity: [
+        "m/s",
+        "m/min",
+        "m/h",
+        "km/s",
+        "km/min",
+        "km/h",
+        "cm/s",
+        "cm/min",
+        "cm/h",
+    ],
 }

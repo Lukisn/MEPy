@@ -9,10 +9,10 @@ import sys
 from PySide6.QtWidgets import QApplication
 from pint import Quantity
 
-from mepcalc.gui.qalculator_base import QalculatorWidget
+from mepcalc.gui.heat_calculator_base import HeatCalculatorWidget
 
 
-class QalculatorVolumeWidget(QalculatorWidget):
+class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
     """Heat flow from volume flow calculator widget."""
 
     def initialize_widgets(self) -> None:
@@ -131,8 +131,8 @@ class QalculatorVolumeWidget(QalculatorWidget):
 def main():
     """Main program."""
     app = QApplication()
-    window = QalculatorVolumeWidget()
-    window.setWindowTitle("Qalculator Volume")
+    window = HeatCalculatorVolumeWidget()
+    window.setWindowTitle("Heat Flow Calculator Volume")
     window.show()
     sys.exit(app.exec())
 
