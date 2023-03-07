@@ -19,11 +19,16 @@ from mepcalc.common.medium import Medium
 from mepcalc.common.units import Units, units_map
 
 
+# TODO: debug double calculation on changed output
+# outputs changed is triggered twice because one radio button is switched off
+# when another one is switched on
+# https://stackoverflow.com/questions/58780920/can-i-get-a-signal-from-a-qgroupbox-when-one-of-the-radiobuttons-in-it-is-change
 class HeatCalculatorWidget(QWidget):
     """Heat flow from mass flow calculator widget."""
 
     def __init__(self, parent=None, medium: Medium = Medium.water()) -> None:
         """Initializer."""
+        # print("initializing")
         super().__init__(parent)
         self.medium = medium
         self.permanently_disabled: List[QWidget] = []
@@ -31,16 +36,18 @@ class HeatCalculatorWidget(QWidget):
 
     def setup_ui(self) -> None:
         """Setup user interface"""
+        # print("setting up ui")
         # configure and layout widgets
         self.create_widgets()
         self.initialize_widgets()
         self.build_layout()
         self.connect_signals_and_slots()
-        # setup calculation fields by calling slots
-        self.output_changed()
+        # setup calculation fields by calling slots by hand
+        self.output_changed(checked=True)
 
     def create_widgets(self) -> None:
         """Create widgets."""
+        # print("creating widgets")
         # Radio Buttons
         self.radio_heat_flow = QRadioButton()
         self.radio_mass_flow = QRadioButton()
@@ -68,6 +75,7 @@ class HeatCalculatorWidget(QWidget):
 
     def initialize_widgets(self) -> None:
         """Setup widgets for the user interface."""
+        # print("initializing widgets")
         # Setup double validator
         c_locale = QLocale.c()
         c_locale.setNumberOptions(QLocale.NumberOption.RejectGroupSeparator)
@@ -98,7 +106,7 @@ class HeatCalculatorWidget(QWidget):
         self.edit_volume_flow_magnitude.setText("1.0")
         self.edit_volume_flow_magnitude.setPlaceholderText("Volume Flow")
         self.edit_volume_flow_magnitude.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.combo_volume_flow_unit = QComboBox()
+        self.edit_volume_flow_magnitude.setValidator(double_validator)
         self.combo_volume_flow_unit.addItems(units_map[Units.VolumeFlow])
         # Temperature Difference
         self.label_temp_diff_name.setText("Temp. Diff.")
@@ -119,6 +127,7 @@ class HeatCalculatorWidget(QWidget):
           2 | Radio | Volume Flow | V  | Edit | Combo |
           3 | Radio | Temp. Diff. | dT | Edit | Combo |
         """
+        # print("building layout")
         layout = QGridLayout()
         row = 0  # Heat Flow
         layout.addWidget(self.radio_heat_flow, row, 0)
@@ -148,6 +157,7 @@ class HeatCalculatorWidget(QWidget):
 
     def connect_signals_and_slots(self) -> None:
         """Connect signals to slots."""
+        # print("connecting signals and slots")
         # radio buttons -> calculation output changed -> recalculate
         self.radio_heat_flow.toggled.connect(self.output_changed)
         self.radio_mass_flow.toggled.connect(self.output_changed)
@@ -164,8 +174,12 @@ class HeatCalculatorWidget(QWidget):
         self.combo_temp_diff_unit.currentTextChanged.connect(self.inputs_changed)
 
     @Slot()
-    def output_changed(self) -> None:
+    def output_changed(self, checked=False) -> None:
         """Set output to: heat flow, fluid flow or temperature difference."""
+        # print(f"output changed triggered by {self.sender()} checked = {checked}")
+        if not checked:
+            # print("returning")
+            return
         # enable all line edit fields
         self.edit_heat_flow_magnitude.setEnabled(True)
         self.edit_mass_flow_magnitude.setEnabled(True)
@@ -189,6 +203,7 @@ class HeatCalculatorWidget(QWidget):
     @Slot()
     def inputs_changed(self) -> None:
         """Recalculate on changed inputs."""
+        # print(f"inputs changed triggered by {self.sender()}")
         if self.radio_heat_flow.isChecked():
             self.calculate_heat_flow()
         elif self.radio_mass_flow.isChecked():
@@ -197,7 +212,6 @@ class HeatCalculatorWidget(QWidget):
             self.calculate_volume_flow()
         else:  # self.radio_temperature_difference.isChecked():
             self.calculate_temperature_difference()
-        self.calculate_volume_flow()
 
     def permanently_disable(self, widget: QWidget) -> None:
         """Permanently disable widget."""
@@ -209,18 +223,19 @@ class HeatCalculatorWidget(QWidget):
 
     def calculate_heat_flow(self) -> None:
         """Calculate heat flow."""
-        # TODO: notimplemented or abstract method?
+        print("calculating heat flow")
 
     def calculate_mass_flow(self) -> None:
         """Calculate mass flow."""
+        print("calculating mass flow")
 
     def calculate_volume_flow(self) -> None:
         """Calculate volume flow."""
-        # TODO: notimplemented or abstract method?
+        print("calculating volume flow")
 
     def calculate_temperature_difference(self) -> None:
         """Calculate temperature difference."""
-        # TODO: notimplemented or abstract method?
+        print("calculating temperature difference")
 
 
 def main():

@@ -1,8 +1,10 @@
 """Duct Air Flow Calculator GUI base."""
 
 import sys
+from abc import ABC, abstractmethod
+from typing import List
 
-from PySide6.QtCore import QLocale
+from PySide6.QtCore import QLocale, Slot
 from PySide6.QtGui import QDoubleValidator, Qt
 from PySide6.QtWidgets import (
     QApplication,
@@ -11,8 +13,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QComboBox,
-    QFormLayout,
-    QHBoxLayout,
     QGridLayout,
 )
 
@@ -20,7 +20,7 @@ from mepcalc.common.medium import Medium
 from mepcalc.common.units import units_map, Units
 
 
-# TODO: implement! Extract ABC?
+# TODO: implement "abstract" base class???
 class DuctCalculatorWidget(QWidget):
     """Duct air flow calculator widget."""
 
@@ -28,7 +28,16 @@ class DuctCalculatorWidget(QWidget):
         """Initializer."""
         super().__init__(parent)
         self.medium = medium
+        self.permanently_disabled: List[QWidget] = []
         self.setup_ui()
+
+    def permanently_disable(self, widget: QWidget) -> None:
+        """Permanently disable widget."""
+        self.permanently_disabled.append(widget)
+
+    def enable_all(self) -> None:
+        """Enable all previously permanently disabled widgets."""
+        self.permanently_disabled.clear()
 
     def setup_ui(self):
         """Setup user interface."""
@@ -38,8 +47,7 @@ class DuctCalculatorWidget(QWidget):
         self.build_layout()
         self.connect_signals_and_slots()
         # setup calculation fields by calling slots
-        # TODO: implement like in the other example?
-        # self.output_changed()
+        self.output_changed()
 
     def create_widgets(self):
         """Create widgets."""
@@ -93,7 +101,6 @@ class DuctCalculatorWidget(QWidget):
         double_validator.setNotation(QDoubleValidator.Notation.StandardNotation)
         # Radio Buttons
         self.radio_width.setChecked(True)
-        self.radio_height.setDisabled(True)
         # Width
         self.label_width_name.setText("Width")
         self.label_width_symbol.setText("w")
@@ -211,7 +218,106 @@ class DuctCalculatorWidget(QWidget):
 
     def connect_signals_and_slots(self) -> None:
         """Connect signals to slots."""
-        ...
+        # radio buttons -> calculation output changed -> recalculate
+        self.radio_width.toggled.connect(self.output_changed)
+        self.radio_height.toggled.connect(self.output_changed)
+        self.radio_diameter.toggled.connect(self.output_changed)
+        self.radio_area.toggled.connect(self.output_changed)
+        self.radio_volume_flow.toggled.connect(self.output_changed)
+        self.radio_mass_flow.toggled.connect(self.output_changed)
+        self.radio_velocity.toggled.connect(self.output_changed)
+        # magnitudes and units -> inputs changed -> recalculate
+        self.edit_width_magnitude.textEdited.connect(self.inputs_changed)
+        self.combo_width_unit.currentTextChanged.connect(self.inputs_changed)
+        self.edit_height_magnitude.textEdited.connect(self.inputs_changed)
+        self.combo_height_unit.currentTextChanged.connect(self.inputs_changed)
+        self.edit_diameter_magnitude.textEdited.connect(self.inputs_changed)
+        self.combo_diameter_unit.currentTextChanged.connect(self.inputs_changed)
+        self.edit_area_magnitude.textEdited.connect(self.inputs_changed)
+        self.combo_area_unit.currentTextChanged.connect(self.inputs_changed)
+        self.edit_volume_flow_magnitude.textEdited.connect(self.inputs_changed)
+        self.combo_volume_flow_unit.currentTextChanged.connect(self.inputs_changed)
+        self.edit_mass_flow_magnitude.textEdited.connect(self.inputs_changed)
+        self.combo_mass_flow_unit.currentTextChanged.connect(self.inputs_changed)
+        self.edit_velocity_magnitude.textEdited.connect(self.inputs_changed)
+        self.combo_velocity_unit.currentTextChanged.connect(self.inputs_changed)
+
+    @Slot()
+    def output_changed(self) -> None:
+        """Set output to: heat flow, fluid flow or temperature difference."""
+        # enable all line edit fields
+        self.edit_width_magnitude.setEnabled(True)
+        self.edit_height_magnitude.setEnabled(True)
+        self.edit_diameter_magnitude.setEnabled(True)
+        self.edit_area_magnitude.setEnabled(True)
+        self.edit_volume_flow_magnitude.setEnabled(True)
+        self.edit_mass_flow_magnitude.setEnabled(True)
+        self.edit_velocity_magnitude.setEnabled(True)
+        # disable permanently disabled widgets
+        for widget in self.permanently_disabled:
+            widget.setDisabled(True)
+        # disable current output field
+        if self.radio_width.isChecked():
+            self.edit_width_magnitude.setDisabled(True)
+        elif self.radio_height.isChecked():
+            self.edit_height_magnitude.setDisabled(True)
+        elif self.radio_diameter.isChecked():
+            self.edit_diameter_magnitude.setDisabled(True)
+        elif self.radio_area.isChecked():
+            self.edit_area_magnitude.setDisabled(True)
+        elif self.radio_volume_flow.isChecked():
+            self.edit_volume_flow_magnitude.setDisabled(True)
+        elif self.radio_mass_flow.isChecked():
+            self.edit_mass_flow_magnitude.setDisabled(True)
+        else:  # self.radio_velocity.isChecked():
+            self.edit_velocity_magnitude.setDisabled(True)
+        self.inputs_changed()
+
+    @Slot()
+    def inputs_changed(self) -> None:
+        """Recalculate on changed inputs."""
+        if self.radio_width.isChecked():
+            self.calculate_width()
+        elif self.radio_height.isChecked():
+            self.calculate_height()
+        elif self.radio_diameter.isChecked():
+            self.calculate_diameter()
+        elif self.radio_area.isChecked():
+            self.calculate_area()
+        elif self.radio_volume_flow.isChecked():
+            self.calculate_volume_flow()
+        elif self.radio_mass_flow.isChecked():
+            self.calculate_mass_flow()
+        else:  # self.radio_velocity.isChecked():
+            self.calculate_velocity()
+
+    def calculate_width(self) -> None:
+        """Calculate width."""
+        print("calculating width")
+
+    def calculate_height(self) -> None:
+        """Calculate height."""
+        print("calculating height")
+
+    def calculate_diameter(self) -> None:
+        """Calculate diameter."""
+        print("calculating diameter")
+
+    def calculate_area(self) -> None:
+        """Calculate area."""
+        print("calculating area")
+
+    def calculate_volume_flow(self) -> None:
+        """Calculate volume flow."""
+        print("calculating volume flow")
+
+    def calculate_mass_flow(self) -> None:
+        """Calculate mass flow."""
+        print("calculating mass flow")
+
+    def calculate_velocity(self) -> None:
+        """Calculate velocity."""
+        print("calculating velocity")
 
 
 def main():
