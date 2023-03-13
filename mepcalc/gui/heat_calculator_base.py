@@ -1,7 +1,6 @@
 """Heat Flow Calculator GUI base."""
 
 import sys
-from typing import List
 
 from PySide6.QtCore import QLocale, Qt, Slot
 from PySide6.QtGui import QDoubleValidator
@@ -12,32 +11,19 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QRadioButton,
-    QWidget,
 )
 
 from mepcalc.common.medium import Medium
 from mepcalc.common.units import Units, units_map
+from mepcalc.gui.base_calculator import BaseCalculatorWidget
 
 
-class HeatCalculatorWidget(QWidget):
+class HeatCalculatorWidget(BaseCalculatorWidget):
     """Heat flow from mass flow calculator widget."""
 
-    def __init__(self, parent=None, medium: Medium = Medium.water()) -> None:
+    def __init__(self, medium: Medium, parent=None):
         """Initializer."""
-        super().__init__(parent)
-        self.medium = medium
-        self.permanently_disabled: List[QWidget] = []
-        self.setup_ui()
-
-    def setup_ui(self) -> None:
-        """Setup user interface"""
-        # configure and layout widgets
-        self.create_widgets()
-        self.initialize_widgets()
-        self.build_layout()
-        self.connect_signals_and_slots()
-        # setup calculation fields by calling slots by hand
-        self.output_changed()
+        super().__init__(medium, parent)
 
     def create_widgets(self) -> None:
         """Create widgets."""
@@ -165,9 +151,7 @@ class HeatCalculatorWidget(QWidget):
 
     @Slot()
     def output_changed(self, checked=True) -> None:
-        """Set output to: heat flow, fluid flow or temperature difference."""
-        if not checked:  # only update if radio button was activated
-            return
+        super().output_changed(checked)
         # enable all line edit fields
         self.edit_heat_flow_magnitude.setEnabled(True)
         self.edit_mass_flow_magnitude.setEnabled(True)
@@ -200,14 +184,6 @@ class HeatCalculatorWidget(QWidget):
         else:  # self.radio_temperature_difference.isChecked():
             self.calculate_temperature_difference()
 
-    def permanently_disable(self, widget: QWidget) -> None:
-        """Permanently disable widget."""
-        self.permanently_disabled.append(widget)
-
-    def enable_all(self) -> None:
-        """Enable all previously permanently disabled widgets."""
-        self.permanently_disabled.clear()
-
     def calculate_heat_flow(self) -> None:
         """Calculate heat flow."""
         pass
@@ -228,7 +204,7 @@ class HeatCalculatorWidget(QWidget):
 def main():
     """Main program."""
     app = QApplication()
-    window = HeatCalculatorWidget()
+    window = HeatCalculatorWidget(medium=Medium.water())
     window.setWindowTitle("Heat Flow Calculator Base")
     window.show()
     sys.exit(app.exec())

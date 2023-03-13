@@ -9,10 +9,10 @@ import sys
 from PySide6.QtWidgets import QApplication
 from pint import Quantity
 
+from mepcalc.common.medium import Medium
 from mepcalc.gui.heat_calculator_base import HeatCalculatorWidget
 
 
-# TODO: calculate mass flow on the fly
 class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
     """Heat flow from volume flow calculator widget."""
 
@@ -50,6 +50,7 @@ class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
         self.edit_heat_flow_magnitude.setText(
             str(heat_flow.to(heat_flow_unit).magnitude)
         )
+        self.calculate_mass_flow()
 
     def calculate_volume_flow(self) -> None:
         """Calculate volume flow from heat flow and temperature difference.
@@ -79,6 +80,7 @@ class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
         self.edit_volume_flow_magnitude.setText(
             str(volume_flow.to(volume_flow_unit).magnitude)
         )
+        self.calculate_mass_flow()
 
     def calculate_temperature_difference(self) -> None:
         """Calculate temperature difference from heat flow and volume flow.
@@ -108,6 +110,7 @@ class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
         self.edit_temp_diff_magnitude.setText(
             str(temp_diff.to(temp_diff_unit).magnitude)
         )
+        self.calculate_mass_flow()
 
     def calculate_mass_flow(self) -> None:
         """Calculate mass flow from volume flow.
@@ -132,7 +135,7 @@ class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
 def main():
     """Main program."""
     app = QApplication()
-    window = HeatCalculatorVolumeWidget()
+    window = HeatCalculatorVolumeWidget(medium=Medium.water())
     window.setWindowTitle("Heat Flow Calculator Volume")
     window.show()
     sys.exit(app.exec())

@@ -9,10 +9,11 @@ import sys
 from PySide6.QtWidgets import QApplication
 from pint import Quantity
 
+from mepcalc.common.medium import Medium
 from mepcalc.gui.heat_calculator_base import HeatCalculatorWidget
 
 
-# TODO: calculate volume flow on the fly
+# TODO: format number output to reduce decimal places
 class HeatCalculatorMassWidget(HeatCalculatorWidget):
     """Heat flow from mass flow calculator widget."""
 
@@ -48,6 +49,7 @@ class HeatCalculatorMassWidget(HeatCalculatorWidget):
         self.edit_heat_flow_magnitude.setText(
             str(heat_flow.to(heat_flow_unit).magnitude)
         )
+        self.calculate_volume_flow()
 
     def calculate_mass_flow(self) -> None:
         """Calculate mass flow using:
@@ -75,6 +77,7 @@ class HeatCalculatorMassWidget(HeatCalculatorWidget):
         self.edit_mass_flow_magnitude.setText(
             str(mass_flow.to(mass_flow_unit).magnitude)
         )
+        self.calculate_volume_flow()
 
     def calculate_volume_flow(self) -> None:
         """Calculate volume flow.
@@ -120,12 +123,13 @@ class HeatCalculatorMassWidget(HeatCalculatorWidget):
         self.edit_temp_diff_magnitude.setText(
             str(temp_diff.to(temperature_difference_unit).magnitude)
         )
+        self.calculate_volume_flow()
 
 
 def main():
     """Main program."""
     app = QApplication()
-    window = HeatCalculatorMassWidget()
+    window = HeatCalculatorMassWidget(medium=Medium.water())
     window.setWindowTitle("Heat Flow Calculator Mass")
     window.show()
     sys.exit(app.exec())

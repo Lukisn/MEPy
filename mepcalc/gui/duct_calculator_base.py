@@ -1,7 +1,6 @@
 """Duct Air Flow Calculator GUI base."""
 
 import sys
-from abc import ABC, abstractmethod
 from typing import List
 
 from PySide6.QtCore import QLocale, Slot
@@ -18,36 +17,16 @@ from PySide6.QtWidgets import (
 
 from mepcalc.common.medium import Medium
 from mepcalc.common.units import units_map, Units
+from mepcalc.gui.base_calculator import BaseCalculatorWidget
 
 
 # TODO: implement "abstract" base class???
-class DuctCalculatorWidget(QWidget):
+class DuctCalculatorWidget(BaseCalculatorWidget):
     """Duct air flow calculator widget."""
 
-    def __init__(self, parent=None, medium: Medium = Medium.air()):
+    def __init__(self, medium: Medium, parent=None):
         """Initializer."""
-        super().__init__(parent)
-        self.medium = medium
-        self.permanently_disabled: List[QWidget] = []
-        self.setup_ui()
-
-    def permanently_disable(self, widget: QWidget) -> None:
-        """Permanently disable widget."""
-        self.permanently_disabled.append(widget)
-
-    def enable_all(self) -> None:
-        """Enable all previously permanently disabled widgets."""
-        self.permanently_disabled.clear()
-
-    def setup_ui(self):
-        """Setup user interface."""
-        # configure and layout widgets
-        self.create_widgets()
-        self.initialize_widgets()
-        self.build_layout()
-        self.connect_signals_and_slots()
-        # setup calculation fields by calling slots
-        self.output_changed()
+        super().__init__(medium, parent)
 
     def create_widgets(self):
         """Create widgets."""
@@ -245,8 +224,7 @@ class DuctCalculatorWidget(QWidget):
     @Slot()
     def output_changed(self, checked=True) -> None:
         """Set output to: heat flow, fluid flow or temperature difference."""
-        if not checked:  # only update if radio button was activated
-            return
+        super().output_changed(checked)
         # enable all line edit fields
         self.edit_width_magnitude.setEnabled(True)
         self.edit_height_magnitude.setEnabled(True)
@@ -325,7 +303,7 @@ class DuctCalculatorWidget(QWidget):
 def main():
     """Main program."""
     app = QApplication()
-    window = DuctCalculatorWidget()
+    window = DuctCalculatorWidget(medium=Medium.air())
     window.setWindowTitle("Duct Calculator Base")
     window.show()
     sys.exit(app.exec())
