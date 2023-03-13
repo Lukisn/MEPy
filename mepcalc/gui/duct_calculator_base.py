@@ -243,8 +243,10 @@ class DuctCalculatorWidget(QWidget):
         self.combo_velocity_unit.currentTextChanged.connect(self.inputs_changed)
 
     @Slot()
-    def output_changed(self) -> None:
+    def output_changed(self, checked=True) -> None:
         """Set output to: heat flow, fluid flow or temperature difference."""
+        if not checked:  # only update if radio button was activated
+            return
         # enable all line edit fields
         self.edit_width_magnitude.setEnabled(True)
         self.edit_height_magnitude.setEnabled(True)
@@ -293,31 +295,31 @@ class DuctCalculatorWidget(QWidget):
 
     def calculate_width(self) -> None:
         """Calculate width."""
-        print("calculating width")
+        pass
 
     def calculate_height(self) -> None:
         """Calculate height."""
-        print("calculating height")
+        pass
 
     def calculate_diameter(self) -> None:
         """Calculate diameter."""
-        print("calculating diameter")
+        pass
 
     def calculate_area(self) -> None:
         """Calculate area."""
-        print("calculating area")
+        pass
 
     def calculate_volume_flow(self) -> None:
         """Calculate volume flow."""
-        print("calculating volume flow")
+        pass
 
     def calculate_mass_flow(self) -> None:
         """Calculate mass flow."""
-        print("calculating mass flow")
+        pass
 
     def calculate_velocity(self) -> None:
         """Calculate velocity."""
-        print("calculating velocity")
+        pass
 
 
 def main():

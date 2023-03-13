@@ -12,6 +12,7 @@ from pint import Quantity
 from mepcalc.gui.heat_calculator_base import HeatCalculatorWidget
 
 
+# TODO: calculate mass flow on the fly
 class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
     """Heat flow from volume flow calculator widget."""
 
