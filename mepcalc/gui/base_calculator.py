@@ -15,6 +15,8 @@ from mepcalc.common.medium import Medium
 class BaseCalculatorWidget(QWidget):
     """Base class for calculator ."""
 
+    OUTPUT_FORMAT_SPEC = ".6g"
+
     def __init__(self, medium: Medium, parent=None) -> None:
         super().__init__(parent)
         self.medium = medium

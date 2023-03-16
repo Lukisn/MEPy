@@ -1,13 +1,11 @@
 """Duct Air Flow Calculator GUI base."""
 
 import sys
-from typing import List
 
 from PySide6.QtCore import QLocale, Slot
 from PySide6.QtGui import QDoubleValidator, Qt
 from PySide6.QtWidgets import (
     QApplication,
-    QWidget,
     QRadioButton,
     QLabel,
     QLineEdit,
@@ -20,7 +18,6 @@ from mepcalc.common.units import units_map, Units
 from mepcalc.gui.base_calculator import BaseCalculatorWidget
 
 
-# TODO: implement "abstract" base class???
 class DuctCalculatorWidget(BaseCalculatorWidget):
     """Duct air flow calculator widget."""
 

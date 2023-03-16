@@ -25,7 +25,7 @@ class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
     def calculate_heat_flow(self) -> None:
         """Calculate heat flow from volume flow and temperature difference.
 
-        Using formila: Q = m * cp * dT, m = V * rho and C := rho * cp
+        Using formula: Q = m * cp * dT, m = V * rho and C := rho * cp
         effectively running: Q = V * C * dT
         """
         # read inputs
@@ -48,7 +48,7 @@ class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
         )
         # write output
         self.edit_heat_flow_magnitude.setText(
-            str(heat_flow.to(heat_flow_unit).magnitude)
+            f"{heat_flow.to(heat_flow_unit).magnitude:{self.OUTPUT_FORMAT_SPEC}}"
         )
         self.calculate_mass_flow()
 
@@ -78,7 +78,7 @@ class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
         )
         # write outputs
         self.edit_volume_flow_magnitude.setText(
-            str(volume_flow.to(volume_flow_unit).magnitude)
+            f"{volume_flow.to(volume_flow_unit).magnitude:{self.OUTPUT_FORMAT_SPEC}}"
         )
         self.calculate_mass_flow()
 
@@ -108,7 +108,7 @@ class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
         )
         # write output
         self.edit_temp_diff_magnitude.setText(
-            str(temp_diff.to(temp_diff_unit).magnitude)
+            f"{temp_diff.to(temp_diff_unit).magnitude:{self.OUTPUT_FORMAT_SPEC}}"
         )
         self.calculate_mass_flow()
 
@@ -128,7 +128,7 @@ class HeatCalculatorVolumeWidget(HeatCalculatorWidget):
         print(f"{mass_flow:~P} = {volume_flow:~P} * {self.medium.density:~P}")
         # write output
         self.edit_mass_flow_magnitude.setText(
-            str(mass_flow.to(mass_flow_unit).magnitude)
+            f"{mass_flow.to(mass_flow_unit).magnitude:{self.OUTPUT_FORMAT_SPEC}}"
         )
 
 

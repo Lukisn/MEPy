@@ -13,7 +13,6 @@ from mepcalc.common.medium import Medium
 from mepcalc.gui.heat_calculator_base import HeatCalculatorWidget
 
 
-# TODO: format number output to reduce decimal places
 class HeatCalculatorMassWidget(HeatCalculatorWidget):
     """Heat flow from mass flow calculator widget."""
 
@@ -47,7 +46,7 @@ class HeatCalculatorMassWidget(HeatCalculatorWidget):
         )
         # write output
         self.edit_heat_flow_magnitude.setText(
-            str(heat_flow.to(heat_flow_unit).magnitude)
+            f"{heat_flow.to(heat_flow_unit).magnitude:{self.OUTPUT_FORMAT_SPEC}}"
         )
         self.calculate_volume_flow()
 
@@ -75,7 +74,7 @@ class HeatCalculatorMassWidget(HeatCalculatorWidget):
         )
         # write outputs
         self.edit_mass_flow_magnitude.setText(
-            str(mass_flow.to(mass_flow_unit).magnitude)
+            f"{mass_flow.to(mass_flow_unit).magnitude:{self.OUTPUT_FORMAT_SPEC}}"
         )
         self.calculate_volume_flow()
 
@@ -95,7 +94,7 @@ class HeatCalculatorMassWidget(HeatCalculatorWidget):
         print(f"{volume_flow:~P} = {mass_flow:~P} / {self.medium.density:~P}")
         # write outputs
         self.edit_volume_flow_magnitude.setText(
-            str(volume_flow.to(volume_flow_unit).magnitude)
+            f"{volume_flow.to(volume_flow_unit).magnitude:{self.OUTPUT_FORMAT_SPEC}}"
         )
 
     def calculate_temperature_difference(self) -> None:
@@ -121,7 +120,7 @@ class HeatCalculatorMassWidget(HeatCalculatorWidget):
         )
         # write outputs
         self.edit_temp_diff_magnitude.setText(
-            str(temp_diff.to(temperature_difference_unit).magnitude)
+            f"{temp_diff.to(temperature_difference_unit).magnitude:{self.OUTPUT_FORMAT_SPEC}}"
         )
         self.calculate_volume_flow()
 
